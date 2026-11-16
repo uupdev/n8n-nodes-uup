@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Fix: the Project list failed with "Invalid URL" when the **You Up?** node is used as an AI Agent tool. The list now loads in both places.
+
 ## 0.1.1
 
 - No change to the nodes. This release is published with npm trusted publishing, without a token.

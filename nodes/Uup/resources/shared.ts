@@ -1,5 +1,8 @@
 import type { IDataObject, INodeProperties } from 'n8n-workflow';
 
+/** Where `/v1` lives; also the node's `requestDefaults.baseURL`. */
+export const BASE_URL = 'https://api.uup.dev/v1';
+
 /** The largest page `/v1` answers. */
 export const PAGE_MAX = 200;
 
@@ -35,30 +38,7 @@ export function projectField(show: IDataObject, required = true): INodePropertie
 		description:
 			'The Project to read. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 		displayOptions: { show: show as { [key: string]: Array<string> } },
-		typeOptions: {
-			loadOptions: {
-				routing: {
-					request: {
-						method: 'GET',
-						url: '/projects',
-						qs: { limit: PAGE_MAX },
-					},
-					output: {
-						postReceive: [
-							{ type: 'rootProperty', properties: { property: 'data' } },
-							{
-								type: 'setKeyValue',
-								properties: {
-									name: '={{ $responseItem.name }}',
-									value: '={{ $responseItem.id }}',
-								},
-							},
-							{ type: 'sort', properties: { key: 'name' } },
-						],
-					},
-				},
-			},
-		},
+		typeOptions: { loadOptionsMethod: 'getProjects' },
 	};
 }
 

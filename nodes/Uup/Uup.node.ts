@@ -1,7 +1,9 @@
 import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
+import { getProjects } from './methods/loadOptions';
 import { incidentDescription } from './resources/incident';
 import { monitorDescription } from './resources/monitor';
 import { projectDescription } from './resources/project';
+import { BASE_URL } from './resources/shared';
 import { statusDescription } from './resources/status';
 
 export class Uup implements INodeType {
@@ -21,7 +23,7 @@ export class Uup implements INodeType {
 		outputs: [NodeConnectionTypes.Main],
 		credentials: [{ name: 'uupApi', required: true }],
 		requestDefaults: {
-			baseURL: 'https://api.uup.dev/v1',
+			baseURL: BASE_URL,
 			headers: {
 				Accept: 'application/json',
 			},
@@ -45,5 +47,9 @@ export class Uup implements INodeType {
 			...monitorDescription,
 			...incidentDescription,
 		],
+	};
+
+	methods = {
+		loadOptions: { getProjects },
 	};
 }

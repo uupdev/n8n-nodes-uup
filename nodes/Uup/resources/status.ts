@@ -34,26 +34,7 @@ export const statusDescription: INodeProperties[] = [
 		description:
 			'Only this Project. Leave empty for every Project the token reaches. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 		displayOptions: { show: { ...show, operation: ['get'] } },
-		typeOptions: {
-			loadOptions: {
-				routing: {
-					request: { method: 'GET', url: '/projects', qs: { limit: 200 } },
-					output: {
-						postReceive: [
-							{ type: 'rootProperty', properties: { property: 'data' } },
-							{
-								type: 'setKeyValue',
-								properties: {
-									name: '={{ $responseItem.name }}',
-									value: '={{ $responseItem.id }}',
-								},
-							},
-							{ type: 'sort', properties: { key: 'name' } },
-						],
-					},
-				},
-			},
-		},
+		typeOptions: { loadOptionsMethod: 'getProjects' },
 		routing: {
 			send: { type: 'query', property: 'project', value: '={{ $value || undefined }}' },
 		},
