@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-uup",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "n8n nodes for You Up? uptime monitoring: send a Heartbeat when a workflow succeeds, and read status, Monitors and Incidents.",
 	"license": "MIT",
 	"homepage": "https://github.com/uupdev/n8n-nodes-uup#readme",
