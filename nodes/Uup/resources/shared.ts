@@ -8,15 +8,18 @@ export const listOutput = {
 	postReceive: [{ type: 'rootProperty' as const, properties: { property: 'data' } }],
 };
 
-/** Follows `next` until the last page, when Return All is on. */
+/**
+ * Follows `next` until the last page, when Return All is on. n8n merges this
+ * request over the operation's options key by key, and a `qs` here would
+ * replace the whole query, filters and all. So the cursor goes on the URL,
+ * and only from the second page on.
+ */
 export const cursorPagination = {
 	type: 'generic' as const,
 	properties: {
 		continue: '={{ !!$response.body.next }}',
 		request: {
-			qs: {
-				cursor: '={{ $response.body.next }}',
-			},
+			url: '={{ $response.body && $response.body.next ? $request.url + "?cursor=" + encodeURIComponent($response.body.next) : $request.url }}',
 		},
 	},
 };
