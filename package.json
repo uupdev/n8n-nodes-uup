@@ -1,0 +1,62 @@
+{
+	"name": "n8n-nodes-uup",
+	"version": "0.1.0",
+	"description": "n8n nodes for You Up? uptime monitoring: send a Heartbeat when a workflow succeeds, and read status, Monitors and Incidents.",
+	"license": "MIT",
+	"homepage": "https://github.com/uupdev/n8n-nodes-uup#readme",
+	"keywords": [
+		"n8n-community-node-package",
+		"n8n",
+		"uptime",
+		"monitoring",
+		"heartbeat",
+		"cron",
+		"you-up",
+		"uup"
+	],
+	"author": {
+		"name": "You Up?",
+		"email": "support@uup.dev",
+		"url": "https://uup.dev/"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/uupdev/n8n-nodes-uup.git"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"release": "n8n-node release",
+		"prepublishOnly": "n8n-node prerelease"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/UupApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/Uup/Uup.node.js",
+			"dist/nodes/UupHeartbeat/UupHeartbeat.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "^0.56.4",
+		"eslint": "9.32.0",
+		"prettier": "3.6.2",
+		"release-it": "^21.1.0",
+		"typescript": "5.9.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	},
+	"bugs": {
+		"url": "https://github.com/uupdev/n8n-nodes-uup/issues"
+	}
+}

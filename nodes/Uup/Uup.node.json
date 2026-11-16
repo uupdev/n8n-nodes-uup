@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-uup.uup",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Development"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/uupdev/n8n-nodes-uup?tab=readme-ov-file#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/uupdev/n8n-nodes-uup?tab=readme-ov-file"
+			}
+		]
+	}
+}

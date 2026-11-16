@@ -1,0 +1,97 @@
+import type { IDataObject, INodeProperties } from 'n8n-workflow';
+
+/** The largest page `/v1` answers. */
+export const PAGE_MAX = 200;
+
+/** Every list answers `{ data, next }`; the items are under `data`. */
+export const listOutput = {
+	postReceive: [{ type: 'rootProperty' as const, properties: { property: 'data' } }],
+};
+
+/** Follows `next` until the last page, when Return All is on. */
+export const cursorPagination = {
+	type: 'generic' as const,
+	properties: {
+		continue: '={{ !!$response.body.next }}',
+		request: {
+			qs: {
+				cursor: '={{ $response.body.next }}',
+			},
+		},
+	},
+};
+
+/** The Project picker, filled from `GET /projects`. */
+export function projectField(show: IDataObject, required = true): INodeProperties {
+	return {
+		displayName: 'Project Name or ID',
+		name: 'projectId',
+		type: 'options',
+		required,
+		default: '',
+		description:
+			'The Project to read. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+		displayOptions: { show: show as { [key: string]: Array<string> } },
+		typeOptions: {
+			loadOptions: {
+				routing: {
+					request: {
+						method: 'GET',
+						url: '/projects',
+						qs: { limit: PAGE_MAX },
+					},
+					output: {
+						postReceive: [
+							{ type: 'rootProperty', properties: { property: 'data' } },
+							{
+								type: 'setKeyValue',
+								properties: {
+									name: '={{ $responseItem.name }}',
+									value: '={{ $responseItem.id }}',
+								},
+							},
+							{ type: 'sort', properties: { key: 'name' } },
+						],
+					},
+				},
+			},
+		},
+	};
+}
+
+/** Return All and Limit for a list operation. */
+export function pageFields(show: { resource: string[]; operation: string[] }): INodeProperties[] {
+	return [
+		{
+			displayName: 'Return All',
+			name: 'returnAll',
+			type: 'boolean',
+			displayOptions: { show },
+			default: false,
+			description: 'Whether to return all results or only up to a given limit',
+			routing: {
+				send: {
+					paginate: '={{ $value }}',
+					type: 'query',
+					property: 'limit',
+					value: `={{ $value ? ${PAGE_MAX} : $parameter.limit }}`,
+				},
+				operations: {
+					pagination: cursorPagination,
+				},
+			},
+		},
+		{
+			displayName: 'Limit',
+			name: 'limit',
+			type: 'number',
+			displayOptions: { show: { ...show, returnAll: [false] } },
+			typeOptions: { minValue: 1, maxValue: PAGE_MAX },
+			default: 50,
+			description: 'Max number of results to return',
+			routing: {
+				output: { maxResults: '={{ $value }}' },
+			},
+		},
+	];
+}
