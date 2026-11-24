@@ -1,5 +1,6 @@
 import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
 import { getProjects } from './methods/loadOptions';
+import { heartbeatDescription, sendHeartbeat } from './resources/heartbeat';
 import { incidentDescription } from './resources/incident';
 import { monitorDescription } from './resources/monitor';
 import { projectDescription } from './resources/project';
@@ -14,14 +15,22 @@ export class Uup implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Read status, Monitors and Incidents from You Up? uptime monitoring',
+		description:
+			'Send a Heartbeat when a workflow succeeds, and read status, Monitors and Incidents from You Up? uptime monitoring',
 		defaults: {
 			name: 'You Up?',
 		},
 		usableAsTool: true,
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
-		credentials: [{ name: 'uupApi', required: true }],
+		// Heartbeat needs no token, and never gets one: its URL is typed by hand.
+		credentials: [
+			{
+				name: 'uupApi',
+				required: true,
+				displayOptions: { hide: { resource: ['heartbeat'] } },
+			},
+		],
 		requestDefaults: {
 			baseURL: BASE_URL,
 			headers: {
@@ -35,13 +44,15 @@ export class Uup implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
+					{ name: 'Heartbeat', value: 'heartbeat' },
 					{ name: 'Incident', value: 'incident' },
 					{ name: 'Monitor', value: 'monitor' },
 					{ name: 'Project', value: 'project' },
 					{ name: 'Status', value: 'status' },
 				],
-				default: 'status',
+				default: 'heartbeat',
 			},
+			...heartbeatDescription,
 			...statusDescription,
 			...projectDescription,
 			...monitorDescription,
@@ -51,5 +62,10 @@ export class Uup implements INodeType {
 
 	methods = {
 		loadOptions: { getProjects },
+	};
+
+	/** Every other operation is declarative routing. */
+	customOperations = {
+		heartbeat: { send: sendHeartbeat },
 	};
 }

@@ -2,10 +2,10 @@
 
 You Up? is an uptime monitoring service that checks your websites, APIs, servers and cron jobs from several locations and alerts you by email, Slack, WhatsApp, SMS and more, only when an outage is confirmed.
 
-This package adds two [n8n](https://n8n.io/) nodes for [You Up?](https://uup.dev/):
+This package adds the **You Up?** node to [n8n](https://n8n.io/), for [You Up?](https://uup.dev/):
 
-- **You Up? Heartbeat** calls a Heartbeat URL when your workflow succeeds. If a run fails, or the workflow stops running, no call arrives and You Up? alerts you.
-- **You Up?** reads status, Projects, Monitors and Incidents from the [You Up? API](https://docs.uup.dev/api/).
+- **Heartbeat → Send** calls a Heartbeat URL when your workflow succeeds. If a run fails, or the workflow stops running, no call arrives and You Up? alerts you.
+- **Status**, **Project**, **Monitor** and **Incident** read from the [You Up? API](https://docs.uup.dev/api/).
 
 [Installation](#installation) · [Heartbeat](#heartbeat) · [Operations](#operations) · [Credentials](#credentials) · [Compatibility](#compatibility) · [Resources](#resources)
 
@@ -19,7 +19,7 @@ Use this node to find out when a scheduled workflow stops working.
 
 1. In You Up?, create a **Heartbeat** Monitor. Give it the same schedule as your workflow.
 2. Copy the **Heartbeat URL** from the Monitor's **Checks** card.
-3. In n8n, add **You Up? Heartbeat** as the last node of the workflow, and paste the URL.
+3. In n8n, add the **You Up?** node as the last node of the workflow, choose **Heartbeat** and **Send**, and paste the URL.
 
 The node runs only when every node before it succeeded, so a failed run sends nothing. If no call arrives in time, You Up? opens an Incident and alerts you.
 
@@ -31,14 +31,15 @@ Things to know:
 - n8n does not run a node that gets no items. If the node before the Heartbeat can return no items on a good run, turn on **Settings → Always Output Data** on that node.
 - Anyone who has the Heartbeat URL can call it. Keep it private: the node masks it like a password.
 
-The node needs no credentials.
+Heartbeat → Send needs no credentials, and never sends your API token.
 
 ## Operations
 
-The **You Up?** node reads data. It does not change anything in your account.
+Apart from Heartbeat → Send, the **You Up?** node only reads data. It does not change anything in your account.
 
 | Resource | Operation | What it returns |
 | --- | --- | --- |
+| Heartbeat | Send | One item: whether the call got through. See [Heartbeat](#heartbeat). |
 | Status | Get | One item for each Project: its Monitors that are not ok, its open Incidents and its open Regional outages. You can limit it to one Project. |
 | Project | Get Many | The Projects your API token can read. |
 | Monitor | Get | One Monitor, with its Checks, their status and any open Incident. |
@@ -51,7 +52,7 @@ The node can also be used as a tool by n8n's AI Agent.
 
 ## Credentials
 
-The **You Up?** node needs a You Up? API token. The **You Up? Heartbeat** node needs none.
+Every operation except Heartbeat → Send needs a You Up? API token.
 
 1. Sign in to [You Up?](https://app.uup.dev/). In the sidebar, open **API tokens** and press **New token**.
 2. Choose the Project it reaches, or every Project. A **Read-only** token is enough for this node.

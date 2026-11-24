@@ -1,7 +1,7 @@
 {
 	"name": "n8n-nodes-uup",
-	"version": "0.1.2",
-	"description": "n8n nodes for You Up? uptime monitoring: send a Heartbeat when a workflow succeeds, and read status, Monitors and Incidents.",
+	"version": "0.2.0",
+	"description": "n8n node for You Up? uptime monitoring: send a Heartbeat when a workflow succeeds, and read status, Monitors and Incidents.",
 	"license": "MIT",
 	"homepage": "https://github.com/uupdev/n8n-nodes-uup#readme",
 	"keywords": [
@@ -45,12 +45,11 @@
 			"dist/credentials/UupApi.credentials.js"
 		],
 		"nodes": [
-			"dist/nodes/Uup/Uup.node.js",
-			"dist/nodes/UupHeartbeat/UupHeartbeat.node.js"
+			"dist/nodes/Uup/Uup.node.js"
 		]
 	},
 	"devDependencies": {
-		"@n8n/node-cli": "^0.56.4",
+		"@n8n/node-cli": "^0.58.5",
 		"eslint": "9.32.0",
 		"prettier": "3.6.2",
 		"release-it": "^21.1.0",

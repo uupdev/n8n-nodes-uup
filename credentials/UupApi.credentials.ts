@@ -25,7 +25,7 @@ export class UupApi implements ICredentialType {
 			default: '',
 			placeholder: 'uup_api_...',
 			description:
-				'An API token from the API tokens screen in You Up?. A Read-only token is enough for this node.',
+				'An API token from the API tokens screen in You Up?. A Read-only token is enough: the node only reads, and Heartbeat needs no token.',
 		},
 	];
 
